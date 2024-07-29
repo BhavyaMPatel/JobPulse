@@ -4,6 +4,19 @@ import jwt from "jsonwebtoken";
 import getDataUri from "../utils/datauri.js";
 import cloudinary from "../utils/cloudinary.js";
 
+
+async function genToken(tokenData){
+    try {
+        const token = jwt.sign(tokenData, process.env.SECRET_KEY, { expiresIn: '1d' });
+        console.log('After generating token');
+
+        return token;
+      } catch (error) {
+        console.error('Error generating token:', error);
+        throw error;
+      }
+}
+
 export const register = async (req, res) => {
     try {
         const { fullname, email, phoneNumber, password, role } = req.body;
@@ -81,7 +94,14 @@ export const login = async (req, res) => {
         const tokenData = {
             userId: user._id
         }
-        const token = await jwt.sign(tokenData, process.env.SECRET_KEY, { expiresIn: '1d' });
+
+        console.log('ENTER TO ASYNC ');
+
+        const token = await genToken(tokenData);
+
+        console.log('WE DONE TO ');
+
+        // const token = await jwt.sign(tokenData, process.env.SECRET_KEY, { expiresIn: '1d' });
 
         user = {
             _id: user._id,
@@ -116,10 +136,15 @@ export const updateProfile = async (req, res) => {
         const { fullname, email, phoneNumber, bio, skills } = req.body;
         
         const file = req.file;
+        let cloudResponse;
         // cloudinary ayega idhar
-        const fileUri = getDataUri(file);
-        const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
-
+        try {
+            let fileUri=getDataUri(file);
+            cloudResponse = await cloudinary.uploader.upload(fileUri.content);
+        }catch (error) {
+            console.log("NO FILE FOUND");
+        }
+        
 
 
         let skillsArray;
