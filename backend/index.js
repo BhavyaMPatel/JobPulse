@@ -18,7 +18,8 @@ app.use(express.urlencoded({extended:true}));
 app.use(cookieParser());
 const corsOptions = {
     origin:'https://dhruvjobplus.web.app',
-    methods:['GET', 'POST']
+    credentials:true,
+    methods:[*]
 }
 
 app.use(cors(corsOptions));
