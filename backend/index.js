@@ -19,7 +19,7 @@ app.use(cookieParser());
 const corsOptions = {
     origin:'https://dhruvjobplus.web.app',
     credentials:true,
-    methods:[*]
+    methods:['*']
 }
 
 app.use(cors(corsOptions));
